@@ -11,37 +11,44 @@ function App() {
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
-    if (visible === true) setPage((page) => page + 1)
-  }, [visible])
-
-  useEffect(() => {
     const callbackFunction = (entries) => {
+      //Defoinimos la función a ejecutar cuando el elemento este en pantalla
+      //Aquí solo debemos hacer acciones concernientes a entries, ninguna llamada a una api
       const [entry] = entries
       setVisible(entry.isIntersecting)
+      //Colocaremos como valor un boleano, true si esta en la pantalla, false en cualquier otro caso
     }
+
     const options = {
+      //Configuraciones del intersection observer
       root: null,
       rootMargin: '0px',
       threshold: 1.0
     }
-    const observer = new IntersectionObserver(callbackFunction, options)
-    if (visorRef.current) observer.observe(visorRef.current)
+
+    const observer = new IntersectionObserver(callbackFunction, options) //Creamos la instancia del intersection observer
+
+    if (visorRef.current) observer.observe(visorRef.current) //Sí tenemos al visor, lo observamos
 
     return () => {
+      //Debemos desobservar si salimos del componente
       if (visorRef.current) observer.unobserve(visorRef.current)
     }
   }, [visorRef])
 
   useEffect(() => {
-    const fetchCharacters = async () => {
-      const response = await fetch(
-        `https://rickandmortyapi.com/api/character?page=${page}`
-      )
-      const { results } = await response.json()
-      setCharacters([...characters, ...results])
+    if (visible) {
+      const fetchCharacters = async () => {
+        const response = await fetch(
+          `https://rickandmortyapi.com/api/character?page=${page}`
+        )
+        const { results } = await response.json()
+        setCharacters([...characters, ...results])
+      }
+      fetchCharacters()
+      setPage(page + 1)
     }
-    fetchCharacters()
-  }, [page])
+  }, [visible, characters])
 
   return (
     <div className='App'>

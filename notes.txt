@@ -1,0 +1,21 @@
+Intersection observer con React - Básico
+
+-Debemos tener estos elementos básicos:
+  .Un elemento que sea el visor, para que sea observado, y cuando este llegue a estár en la pantalla, realizar las
+    acciones.
+  .Este elemento lo guardamos en un ref.
+  .Un estado, con un boleano, que se cambiara sí el elemento está siendo visto o no.
+
+useEffect:
+  -Leeremos los cambios de la referencia del visor.
+  -Definimos la función callback del IO: Lo que hara sera colocar en el estado el valor de entry.isIntersecting,
+    donde entry es la primera posición del parametro de este callback.
+  -Definimos un objeto con la configuracion del IO.
+  -Hacemos una instancia de IntersectionObserver, y le pasamos por parametro el callback y la conf.
+  -Hacemos una validación, si hay un valor en el current del visor, ejecutamos el metodo observe() de la instancia.
+    .Le pasamos por parametro ese current.
+  -Al cerrar el useEffect, hacemos la misma validación, pero esta vez ejecutamos el metodo unobserve, y le pasamos
+    el current.
+
+-Cuando se cambie el estado del booleano en el callback, es que vamos a realizar las acciones que necesitemos, por eso
+  tendremos un useEffect que lea ese booleano.
