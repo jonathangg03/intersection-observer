@@ -1,54 +1,33 @@
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState, useRef, useCallback } from 'react'
 import Character from './components/Character'
+import getCaracters from './getCharacters'
+import useVisible from './hooks/useVisible'
 import './App.css'
 
 function App() {
   const [characters, setCharacters] = useState([])
-  const [page, setPage] = useState(0)
+  const [page, setPage] = useState(1)
 
   //IO
   const visorRef = useRef(null)
-  const [visible, setVisible] = useState(false)
+  const { visible } = useVisible({ visorRef })
 
-  useEffect(() => {
-    const callbackFunction = (entries) => {
-      //Defoinimos la función a ejecutar cuando el elemento este en pantalla
-      //Aquí solo debemos hacer acciones concernientes a entries, ninguna llamada a una api
-      const [entry] = entries
-      setVisible(entry.isIntersecting)
-      //Colocaremos como valor un boleano, true si esta en la pantalla, false en cualquier otro caso
-    }
+  const increasePage = () => {
+    setPage((prev) => prev + 1)
+  }
 
-    const options = {
-      //Configuraciones del intersection observer
-      root: null,
-      rootMargin: '0px',
-      threshold: 1.0
-    }
-
-    const observer = new IntersectionObserver(callbackFunction, options) //Creamos la instancia del intersection observer
-
-    if (visorRef.current) observer.observe(visorRef.current) //Sí tenemos al visor, lo observamos
-
-    return () => {
-      //Debemos desobservar si salimos del componente
-      if (visorRef.current) observer.unobserve(visorRef.current)
-    }
-  }, [visorRef])
+  const getCharacters = useCallback(async () => {
+    console.log(page)
+    const results = await getCaracters({ page })
+    setCharacters((prev) => prev.concat(results))
+    increasePage()
+  }, [page])
 
   useEffect(() => {
     if (visible) {
-      const fetchCharacters = async () => {
-        const response = await fetch(
-          `https://rickandmortyapi.com/api/character?page=${page}`
-        )
-        const { results } = await response.json()
-        setCharacters([...characters, ...results])
-      }
-      fetchCharacters()
-      setPage(page + 1)
+      getCharacters()
     }
-  }, [visible, characters])
+  }, [visible, getCharacters])
 
   return (
     <div className='App'>
