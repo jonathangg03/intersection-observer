@@ -2,6 +2,7 @@ import { useEffect, useState, useRef, useCallback } from 'react'
 import Character from './components/Character'
 import getCaracters from './getCharacters'
 import useVisible from './hooks/useVisible'
+import debounce from 'just-debounce-it'
 import './App.css'
 
 function App() {
@@ -12,22 +13,29 @@ function App() {
   const visorRef = useRef(null)
   const { visible } = useVisible({ visorRef })
 
-  const increasePage = () => {
-    setPage((prev) => prev + 1)
-  }
-
-  const getCharacters = useCallback(async () => {
-    console.log(page)
-    const results = await getCaracters({ page })
-    setCharacters((prev) => prev.concat(results))
-    increasePage()
-  }, [page])
+  const changePage = useCallback(
+    () =>
+      debounce(
+        setPage((prev) => prev + 1),
+        100
+      ),
+    []
+  )
 
   useEffect(() => {
     if (visible) {
-      getCharacters()
+      changePage()
     }
-  }, [visible, getCharacters])
+  }, [visible, changePage])
+
+  const gettingCharacters = async ({ page }) => {
+    const results = await getCaracters({ page })
+    setCharacters((prev) => prev.concat(results))
+  }
+
+  useEffect(() => {
+    gettingCharacters({ page })
+  }, [page])
 
   return (
     <div className='App'>

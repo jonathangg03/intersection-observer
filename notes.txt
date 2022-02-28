@@ -1,21 +1,32 @@
-Intersection observer con React - Básico
+Problema:
+  -Vemos que tenemos un warning, esto se debe a que en alguno de los effects no estamos pasando la dependencia
+    'page', y si la pasamos, el programa entraria en un bucle infinito, ya que al hacer fetch, actualizará la
+    pagina, y al actualizarla, hará fetch, así sucesivamente.
+  -La solución que implementamos será el useCallback y la libreria just-debounce-it.
 
--Debemos tener estos elementos básicos:
-  .Un elemento que sea el visor, para que sea observado, y cuando este llegue a estár en la pantalla, realizar las
-    acciones.
-  .Este elemento lo guardamos en un ref.
-  .Un estado, con un boleano, que se cambiara sí el elemento está siendo visto o no.
+-La lógica de la solución: Al llegar a intersectar, el efecto que visualiza esa interseccion lo que hará será cambiar
+  la página, pero la función que cambia la página estara dentro del debounce, y ese debounce, debe estar dentro de un
+  useCallback. Habrá otro efecto que ve si la pagina cambia, este evento es el que debe hacer el fetch.
 
-useEffect:
-  -Leeremos los cambios de la referencia del visor.
-  -Definimos la función callback del IO: Lo que hara sera colocar en el estado el valor de entry.isIntersecting,
-    donde entry es la primera posición del parametro de este callback.
-  -Definimos un objeto con la configuracion del IO.
-  -Hacemos una instancia de IntersectionObserver, y le pasamos por parametro el callback y la conf.
-  -Hacemos una validación, si hay un valor en el current del visor, ejecutamos el metodo observe() de la instancia.
-    .Le pasamos por parametro ese current.
-  -Al cerrar el useEffect, hacemos la misma validación, pero esta vez ejecutamos el metodo unobserve, y le pasamos
-    el current.
+-just-debounce-it: Recibe dos params, un callback, y un tiempo en milisegundos. Lo que hara será que lee cuantas veces
+  se esta llamando a ese callback (osea, el nombre de la variable en la que se esta almacenando ese debounce) y
+  lo ejecuta solo una vez.
 
--Cuando se cambie el estado del booleano en el callback, es que vamos a realizar las acciones que necesitemos, por eso
-  tendremos un useEffect que lea ese booleano.
+-UseCallback: Cuando un componente se vuelve a renderizar, tambien vuelve a definir las funciones que tiene internamente,
+  entonces, lo que hace es que, la función que recibe como 1 parametro, se vuelve a definir solo si alguna de las 
+  dependencias que se pasan como 2do param, cambian.
+
+¿Porqué usar useCallback?
+  -Cuando dentro de un compoente tenemos definida una función que no se encuentra en un hook, siempre que el estado del
+    componente o props cambien, el componente se volvera a renderizar, y esa función se definira de nuevo.
+  -Al hacer useCallback, lo que definimos es que, por mas que el componente se renderice nuevamente, la función se va a
+    mantener igual.
+  -Ahora, sí esa función usa un estado, el valor de ese estado se quedara con el mismo que tenia cuando al inicio se 
+    definió esa función. Por esta razon, al acutalizar estado y querer usar el estado actual, debe usarse el anterior
+    ((prev) => {}), y no el estado directamente.
+  -Suele ser comun cuando en un useEffect, por alguna razón, necesitemos visualizar cuando cambia esa función, y
+    si esta va a estar constantemente cambiando porque su componente se rerenderiza constantemente, entonces
+    necesitaremos colocar esa función dentro de un useCallback.
+
+IMPORTANTE: En nuestro ejemplo, el debounce no es necesario, pero dejo puesta la explicación, en caso de necesitarlo
+  en algún momento.
