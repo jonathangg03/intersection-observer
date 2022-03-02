@@ -1,0 +1,20 @@
+{
+  "files": {
+    "main.css": "/intersection-observer/static/css/main.5beb70e5.chunk.css",
+    "main.js": "/intersection-observer/static/js/main.13f859f1.chunk.js",
+    "main.js.map": "/intersection-observer/static/js/main.13f859f1.chunk.js.map",
+    "runtime-main.js": "/intersection-observer/static/js/runtime-main.964cca2f.js",
+    "runtime-main.js.map": "/intersection-observer/static/js/runtime-main.964cca2f.js.map",
+    "static/js/2.2c241af4.chunk.js": "/intersection-observer/static/js/2.2c241af4.chunk.js",
+    "static/js/2.2c241af4.chunk.js.map": "/intersection-observer/static/js/2.2c241af4.chunk.js.map",
+    "index.html": "/intersection-observer/index.html",
+    "static/css/main.5beb70e5.chunk.css.map": "/intersection-observer/static/css/main.5beb70e5.chunk.css.map",
+    "static/js/2.2c241af4.chunk.js.LICENSE.txt": "/intersection-observer/static/js/2.2c241af4.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.964cca2f.js",
+    "static/js/2.2c241af4.chunk.js",
+    "static/css/main.5beb70e5.chunk.css",
+    "static/js/main.13f859f1.chunk.js"
+  ]
+}
