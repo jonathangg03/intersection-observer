@@ -6,7 +6,7 @@ export default function Character({ character }) {
       <img src={character.image} alt={character.name} />
       <div>
         <h2>{character.name}</h2>
-        <ul>
+        <ul className='character__info'>
           <li>Gender: {character.gender}</li>
           <li>Species: {character.species}</li>
           <li>Origin: {character.origin.name}</li>
